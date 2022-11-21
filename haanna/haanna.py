@@ -265,7 +265,7 @@ class Haanna:
             )
         return xml.text
 
-        @staticmethod
+    @staticmethod
     def get_boiler_status(root):
         """Get the active boiler-heating status (On-Off control)."""
         log_type = "boiler_state"
@@ -282,19 +282,6 @@ class Haanna:
     def get_heating_status(root):
         """Get the active heating status (OpenTherm control)."""
         log_type = "central_heating_state"
-        locator = (
-            "appliance[type='heater_central']/logs/point_log[type='"
-            + log_type
-            + "']/period/measurement"
-        )
-        if root.find(locator) is not None:
-            return root.find(locator).text == "on"
-        return None
-
-    @staticmethod
-    def get_cooling_status(root):
-        """Get the active cooling status."""
-        log_type = "cooling_state"
         locator = (
             "appliance[type='heater_central']/logs/point_log[type='"
             + log_type
@@ -344,17 +331,6 @@ class Haanna:
                 return value
         return None
 
-    def get_current_temperature(self, root):
-        """Get the curent (room) temperature from the thermostat - match to HA name."""
-        current_temp_point_log_id = self.get_point_log_id(root, "temperature")
-        if current_temp_point_log_id:
-            measurement = self.get_measurement_from_point_log(
-                root, current_temp_point_log_id
-            )
-            value = float(measurement)
-            return value
-        return None
-    
     def get_domestic_hot_water_temperature(self, root):
         """Get the curent (room) temperature from the thermostat - match to HA name."""
         current_temp_point_log_id = self.get_point_log_id(root, "domestic_hot_water_temperature")
@@ -366,6 +342,28 @@ class Haanna:
             return value
         return None
 
+    def get_modulation_level(self, root):
+        """Get the curent (room) temperature from the thermostat - match to HA name."""
+        current_temp_point_log_id = self.get_point_log_id(root, "modulation_level")
+        if current_temp_point_log_id:
+            measurement = self.get_measurement_from_point_log(
+                root, current_temp_point_log_id
+            )
+            value = float(measurement)
+            return value
+        return None
+
+    def get_current_temperature(self, root):
+        """Get the curent (room) temperature from the thermostat - match to HA name."""
+        current_temp_point_log_id = self.get_point_log_id(root, "temperature")
+        if current_temp_point_log_id:
+            measurement = self.get_measurement_from_point_log(
+                root, current_temp_point_log_id
+            )
+            value = float(measurement)
+            return value
+        return None
+    
     def get_target_temperature(self, root):
         """Get the target temperature from the thermostat."""
         target_temp_log_id = self.get_point_log_id(root, "target_temperature")
@@ -373,25 +371,6 @@ class Haanna:
             measurement = self.get_measurement_from_point_log(root, target_temp_log_id)
             value = float(measurement)
             return value  
-        return None
-
-    def get_thermostat_temperature(self, root):
-        """Get the target temperature from the thermostat."""
-        thermostat_log_id = self.get_point_log_id(root, "thermostat")
-        if thermostat_log_id:
-            measurement = self.get_measurement_from_point_log(root, thermostat_log_id)
-            value = float(measurement)
-            return value
-        return None
-
-    def get_outdoor_temperature(self, root):
-        """Get the temperature from the thermostat."""
-        outdoor_temp_log_id = self.get_point_log_id(root, "outdoor_temperature")
-        if outdoor_temp_log_id:
-            measurement = self.get_measurement_from_point_log(root, outdoor_temp_log_id)
-            value = float(measurement)
-            value = '{:.1f}'.format(round(value, 1))
-            return value
         return None
 
     def get_illuminance(self, root):
@@ -404,9 +383,9 @@ class Haanna:
             return value
         return None
 
-    def get_boiler_temperature(self, root):
+    def get_return_water_temperature(self, root):
         """Get the boiler_temperature value from the thermostat."""
-        point_log_id = self.get_point_log_id(root, "boiler_temperature")
+        point_log_id = self.get_point_log_id(root, "return_water_temperature")
         if point_log_id:
             measurement = self.get_measurement_from_point_log(root, point_log_id)
             value = float(measurement)
@@ -414,9 +393,9 @@ class Haanna:
             return value
         return None
 
-    def get_water_pressure(self, root):
-        """Get the water pressure value from the thermostat."""
-        point_log_id = self.get_point_log_id(root, "central_heater_water_pressure")
+    def get_boiler_temperature(self, root):
+        """Get the boiler_temperature value from the thermostat."""
+        point_log_id = self.get_point_log_id(root, "boiler_temperature")
         if point_log_id:
             measurement = self.get_measurement_from_point_log(root, point_log_id)
             value = float(measurement)
