@@ -265,7 +265,7 @@ class Haanna:
             )
         return xml.text
 
-    @staticmethod
+        @staticmethod
     def get_boiler_status(root):
         """Get the active boiler-heating status (On-Off control)."""
         log_type = "boiler_state"
@@ -347,6 +347,17 @@ class Haanna:
     def get_current_temperature(self, root):
         """Get the curent (room) temperature from the thermostat - match to HA name."""
         current_temp_point_log_id = self.get_point_log_id(root, "temperature")
+        if current_temp_point_log_id:
+            measurement = self.get_measurement_from_point_log(
+                root, current_temp_point_log_id
+            )
+            value = float(measurement)
+            return value
+        return None
+    
+    def get_domestic_hot_water_temperature(self, root):
+        """Get the curent (room) temperature from the thermostat - match to HA name."""
+        current_temp_point_log_id = self.get_point_log_id(root, "domestic_hot_water_temperature")
         if current_temp_point_log_id:
             measurement = self.get_measurement_from_point_log(
                 root, current_temp_point_log_id
