@@ -266,6 +266,19 @@ class Haanna:
         return xml.text
 
     @staticmethod
+    def get_flame_status(root):
+        """Get the active flame status (On-Off control)."""
+        log_type = "flame_state"
+        locator = (
+            "appliance[type='heater_central']/logs/point_log[type='"
+            + log_type
+            + "']/period/measurement"
+        )
+        if root.find(locator) is not None:
+            return root.find(locator).text == "on"
+        return None
+
+    @staticmethod
     def get_boiler_status(root):
         """Get the active boiler-heating status (On-Off control)."""
         log_type = "boiler_state"
